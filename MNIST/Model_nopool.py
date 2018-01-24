@@ -1,8 +1,8 @@
 '''
-LeNet-5
+LeNet without pooling
 '''
 
-# usage: python MNISTModel3.py - train the model
+# usage: python MNISTModel1.py - train the model
 
 from __future__ import print_function
 
@@ -13,12 +13,11 @@ from keras.utils import to_categorical
 
 from configs import bcolors
 
-from utils import shift_augmentation
 
-def Model3(input_tensor=None, train=False):
+def ModelNoPool(input_tensor=None, train=False):
     nb_classes = 10
     # convolution kernel size
-    kernel_size = (5, 5)
+    kernel_size = (7, 7)
 
     if train:
         batch_size = 256
@@ -30,6 +29,7 @@ def Model3(input_tensor=None, train=False):
         # the data, shuffled and split between train and test sets
         (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
+        print(x_train.shape)
         x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
         x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
         input_shape = (img_rows, img_cols, 1)
@@ -38,12 +38,6 @@ def Model3(input_tensor=None, train=False):
         x_test = x_test.astype('float32')
         x_train /= 255
         x_test /= 255
-
-        x_train, y_train = shift_augmentation(x_train, y_train)
-        #print("x_train.shape:", x_train.shape)
-        #print("y_train.shape:", y_train.shape)
-
-        x_test, y_test = shift_augmentation(x_test, y_test)
 
         # convert class vectors to binary class matrices
         y_train = to_categorical(y_train, nb_classes)
@@ -55,16 +49,17 @@ def Model3(input_tensor=None, train=False):
         exit()
 
     # block1
-    x = Convolution2D(6, kernel_size, activation='relu', padding='same', name='block1_conv1')(input_tensor)
-    x = MaxPooling2D(pool_size=(2, 2), name='block1_pool1')(x)
+    x = Convolution2D(4, kernel_size, activation='relu', padding='valid', name='block1_conv1')(input_tensor)
+    #x = MaxPooling2D(pool_size=(2, 2), name='block1_pool1')(x)
 
     # block2
-    x = Convolution2D(16, kernel_size, activation='relu', padding='same', name='block2_conv1')(x)
-    x = MaxPooling2D(pool_size=(2, 2), name='block2_pool1')(x)
+    x = Convolution2D(8, kernel_size, activation='relu', padding='valid', name='block2_conv1')(x)
+
+    # block3
+    x = Convolution2D(12, kernel_size, activation='relu', padding='valid', name='block3_conv1')(x)
+    #x = MaxPooling2D(pool_size=(2, 2), name='block2_pool1')(x)
 
     x = Flatten(name='flatten')(x)
-    x = Dense(120, activation='relu', name='fc1')(x)
-    x = Dense(84, activation='relu', name='fc2')(x)
     x = Dense(nb_classes, name='before_softmax')(x)
     x = Activation('softmax', name='predictions')(x)
 
@@ -77,18 +72,17 @@ def Model3(input_tensor=None, train=False):
         # trainig
         model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=nb_epoch, verbose=1)
         # save model
-        model.save_weights('./trained_models/Model3_shift.h5')
+        model.save_weights('./trained_models/Model_nopool.h5')
         score = model.evaluate(x_test, y_test, verbose=0)
         print('\n')
         print('Overall Test score:', score[0])
         print('Overall Test accuracy:', score[1])
     else:
-        #model.load_weights('./Model3_shift.h5')
-        model.load_weights('./trained_models/Model3.h5')
-        print(bcolors.OKBLUE + 'Model3 loaded' + bcolors.ENDC)
+        model.load_weights('./trained_models/Model_nopool.h5')
+        print(bcolors.OKBLUE + 'Model_nopool loaded' + bcolors.ENDC)
 
     return model
 
 
 if __name__ == '__main__':
-    Model3(train=True)
+    Model1(train=True)

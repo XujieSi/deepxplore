@@ -1,5 +1,6 @@
+
 '''
-LeNet-5
+Capsule net baseline CNN
 '''
 
 # usage: python MNISTModel3.py - train the model
@@ -15,7 +16,7 @@ from configs import bcolors
 
 from utils import shift_augmentation
 
-def Model3(input_tensor=None, train=False):
+def Model_capbase(input_tensor=None, train=False):
     nb_classes = 10
     # convolution kernel size
     kernel_size = (5, 5)
@@ -54,17 +55,14 @@ def Model3(input_tensor=None, train=False):
         print(bcolors.FAIL + 'you have to proved input_tensor when testing')
         exit()
 
-    # block1
-    x = Convolution2D(6, kernel_size, activation='relu', padding='same', name='block1_conv1')(input_tensor)
-    x = MaxPooling2D(pool_size=(2, 2), name='block1_pool1')(x)
+    x = Convolution2D(256, kernel_size, activation='relu', padding='valid', name='block1_conv1')(input_tensor)
+    x = Convolution2D(256, kernel_size, activation='relu', padding='valid', name='block2_conv1')(x)
+    x = Convolution2D(128, kernel_size, activation='relu', padding='valid', name='block3_conv1')(x)
 
-    # block2
-    x = Convolution2D(16, kernel_size, activation='relu', padding='same', name='block2_conv1')(x)
-    x = MaxPooling2D(pool_size=(2, 2), name='block2_pool1')(x)
 
     x = Flatten(name='flatten')(x)
-    x = Dense(120, activation='relu', name='fc1')(x)
-    x = Dense(84, activation='relu', name='fc2')(x)
+    x = Dense(328, activation='relu', name='fc1')(x)
+    x = Dense(192, activation='relu', name='fc2')(x)
     x = Dense(nb_classes, name='before_softmax')(x)
     x = Activation('softmax', name='predictions')(x)
 
@@ -77,15 +75,15 @@ def Model3(input_tensor=None, train=False):
         # trainig
         model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=nb_epoch, verbose=1)
         # save model
-        model.save_weights('./trained_models/Model3_shift.h5')
+        model.save_weights('./trained_models/Model_capbase.h5')
         score = model.evaluate(x_test, y_test, verbose=0)
         print('\n')
         print('Overall Test score:', score[0])
         print('Overall Test accuracy:', score[1])
     else:
         #model.load_weights('./Model3_shift.h5')
-        model.load_weights('./trained_models/Model3.h5')
-        print(bcolors.OKBLUE + 'Model3 loaded' + bcolors.ENDC)
+        model.load_weights('./trained_models/Model_capbase.h5')
+        print(bcolors.OKBLUE + 'Model_capbase loaded' + bcolors.ENDC)
 
     return model
 

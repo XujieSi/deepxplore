@@ -69,13 +69,13 @@ def Model2(input_tensor=None, train=False):
         # trainig
         model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=nb_epoch, verbose=1)
         # save model
-        model.save_weights('./Model2.h5')
+        model.save_weights('./trained_models/Model2.h5')
         score = model.evaluate(x_test, y_test, verbose=0)
         print('\n')
         print('Overall Test score:', score[0])
         print('Overall Test accuracy:', score[1])
     else:
-        model.load_weights('./Model2.h5')
+        model.load_weights('./trained_models/Model2.h5')
         print(bcolors.OKBLUE + 'Model2 loaded' + bcolors.ENDC)
 
     return model

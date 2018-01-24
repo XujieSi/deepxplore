@@ -6,6 +6,20 @@ from keras import backend as K
 from keras.models import Model
 
 
+def shift_augmentation(X,Y, n=2):
+    m = (2*n+1)**2
+    Xs = []
+    Ys = np.tile(Y,m)
+    for i in range(-n, n+1):
+        for j in range(-n,n+1):
+            tX = np.roll(X, i, axis=1)
+            res = np.roll(tX, j, axis=2)
+            Xs.append(res)
+    
+    return np.vstack(Xs), Ys
+
+
+
 # util function to convert a tensor into a valid image
 def deprocess_image(x):
     x *= 255
