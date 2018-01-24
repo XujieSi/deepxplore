@@ -6,7 +6,6 @@ from __future__ import print_function
 
 from keras.datasets import mnist
 from keras.layers import Input
-from scipy.misc import imsave
 
 #from Model1 import Model1 as Model
 #from Model2 import Model2 as Model
@@ -17,7 +16,6 @@ from scipy.misc import imsave
 #from Model_one_channel import ModelOneChannel as Model
 from Model_capbase import Model_capbase as Model
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 

@@ -14,7 +14,7 @@ from keras.utils import to_categorical
 
 from configs import bcolors
 
-from utils import shift_augmentation
+#from utils import shift_augmentation
 
 def Model_capbase(input_tensor=None, train=False):
     nb_classes = 10
@@ -40,11 +40,11 @@ def Model_capbase(input_tensor=None, train=False):
         x_train /= 255
         x_test /= 255
 
-        x_train, y_train = shift_augmentation(x_train, y_train)
+        #x_train, y_train = shift_augmentation(x_train, y_train)
         #print("x_train.shape:", x_train.shape)
         #print("y_train.shape:", y_train.shape)
 
-        x_test, y_test = shift_augmentation(x_test, y_test)
+        #x_test, y_test = shift_augmentation(x_test, y_test)
 
         # convert class vectors to binary class matrices
         y_train = to_categorical(y_train, nb_classes)

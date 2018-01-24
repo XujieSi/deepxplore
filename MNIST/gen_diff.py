@@ -65,7 +65,7 @@ for _ in xrange(args.seeds):
         model3.predict(gen_img)[0])
 
     if not label1 == label2 == label3:
-        print(bcolors.OKGREEN + 'input already causes different outputs: {}, {}, {}'.format(label1, label2,
+        print(bcolors.OKGREEN + '******* input already causes different outputs: {}, {}, {}'.format(label1, label2,
                                                                                             label3) + bcolors.ENDC)
 
         update_coverage(gen_img, model1, model_layer_dict1, args.threshold)
