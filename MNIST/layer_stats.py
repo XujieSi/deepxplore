@@ -11,12 +11,12 @@ from scipy.misc import imsave
 
 #from Model1 import Model1 as Model
 #from Model2 import Model2 as Model
-#from Model3 import Model3 as Model
+from Model3 import Model3 as Model
 
-from Model_nopool import ModelNoPool as Model
+#from Model_nopool import ModelNoPool as Model
 
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -45,8 +45,8 @@ input_tensor = Input(shape=input_shape)
 model = Model(input_tensor=input_tensor)
 
 
-tmp = np.roll(x_test, -1, axis=1)
-x_U1L1 = np.roll(tmp, -1, axis=2)
+tmp = np.roll(x_test, -2, axis=1)
+x_U1L1 = np.roll(tmp, -2, axis=2)
 
 scores1 = model.predict(x_test)
 print("scores1:", scores1)
@@ -63,6 +63,8 @@ layer_name='before_softmax'
 layer_name='block1_conv1'
 layer_name='block3_conv1'
 #layer_name="fc1"
+layer_name='block1_pool1'
+
 intermediate_layer_model = K.models.Model(inputs=model.input,
                                  outputs=model.get_layer(layer_name).output)
 
@@ -83,12 +85,12 @@ b = intermediate_output2
 sz = 10
 ct = 0
 for i in range(sz-1):
-	for j in range(sz-1):
-		a = intermediate_output1[0][i+1][j+1]
-		b = intermediate_output2[0[i][j]
+    for j in range(sz-1):
+        a = intermediate_output1[0][i+1][j+1]
+        b = intermediate_output2[0][i][j]
 
-		if  np.absolute((a-b).sum()) < 0.001:
-			ct += 1
-			print("no difference: (%d,%d)" % (i,j))
+        if  np.absolute((a-b).sum()) < 0.001:
+            ct += 1
+            print("no difference: (%d,%d)" % (i,j))
 
 print("ct=", ct)
